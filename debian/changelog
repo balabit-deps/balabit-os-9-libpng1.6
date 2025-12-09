@@ -1,3 +1,21 @@
+libpng1.6 (1.6.37-3ubuntu0.1) jammy-security; urgency=medium
+
+  * SECURITY UPDATE: buffer overflow issue
+    - debian/patches/CVE-2025-64505.patch: Fix a buffer overflow in
+      png_do_quantize
+    - debian/patches/CVE-2025-64506.patch: Fix a heap buffer overflow in
+      png_write_image_8bit
+    - debian/patches/CVE-2025-64720.patch: Fix a buffer overflow in
+      png_init_read_transformations
+    - debian/patches/CVE-2025-65018.patch: Fix a heap buffer overflow in
+      png_image_finish_read
+    - CVE-2025-64505
+    - CVE-2025-64506
+    - CVE-2025-64720
+    - CVE-2025-65018
+
+ -- Nishit Majithia <nishit.majithia@canonical.com>  Tue, 09 Dec 2025 17:35:45 +0530
+
 libpng1.6 (1.6.37-3build5) jammy; urgency=high
 
   * No change rebuild for ppc64el baseline bump.
