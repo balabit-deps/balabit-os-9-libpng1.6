@@ -1,3 +1,21 @@
+libpng1.6 (1.6.37-3ubuntu0.3) jammy-security; urgency=medium
+
+  * SECURITY UPDATE: OOB in png_image_read_composite
+    - debian/patches/CVE-2025-66293-1.patch: validate component size in
+      pngread.c.
+    - debian/patches/CVE-2025-66293-2.patch: improve fix in pngread.c.
+    - CVE-2025-66293
+  * SECURITY UPDATE: Heap buffer over-read in png_image_read_direct_scaled
+    - debian/patches/CVE-2026-22695.patch: fix memcpy size in pngread.c.
+    - CVE-2026-22695
+  * SECURITY UPDATE: Integer truncation causing heap buffer over-read
+    - debian/patches/CVE-2026-22801.patch: remove incorrect truncation
+      casts in CMakeLists.txt, contrib/libtests/pngstest.c, pngwrite.c,
+      tests/pngstest-large-stride.
+    - CVE-2026-22801
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Mon, 12 Jan 2026 13:14:59 -0500
+
 libpng1.6 (1.6.37-3ubuntu0.1) jammy-security; urgency=medium
 
   * SECURITY UPDATE: buffer overflow issue
