@@ -1,3 +1,12 @@
+libpng1.6 (1.6.37-3ubuntu0.4) jammy-security; urgency=medium
+
+  * SECURITY UPDATE: OOB read in png_set_quantize()
+    - debian/patches/CVE-2026-25646.patch: fix a heap buffer overflow in
+      pngrtran.c.
+    - CVE-2026-25646
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Wed, 11 Feb 2026 09:27:33 -0500
+
 libpng1.6 (1.6.37-3ubuntu0.3) jammy-security; urgency=medium
 
   * SECURITY UPDATE: OOB in png_image_read_composite
