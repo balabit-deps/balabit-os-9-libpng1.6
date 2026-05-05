@@ -1,0 +1,151 @@
+Backport of:
+
+From 2c974860c73d6d85857d434500d05a9dcf08c13b Mon Sep 17 00:00:00 2001
+From: mohammadmseet-hue <mohammadmseet@gmail.com>
+Date: Mon, 6 Apr 2026 17:25:47 +0200
+Subject: [PATCH] fix: Prevent integer overflow in rowbytes computation
+
+Cast `row_width` to `size_t` before multiplication when computing
+`row_info->rowbytes`, to avoid 32-bit truncation on LP64 systems.
+
+Fix the cast order in `png_do_expand_palette` where the widening
+cast was applied after the multiply rather than before it.
+
+This is a cherry-pick of commit c0ba09ecb44f0962b6532747b09e2f8160e29baf
+from branch 'libpng18'.
+
+Reviewed-by: Cosmin Truta <ctruta@gmail.com>
+Signed-off-by: Cosmin Truta <ctruta@gmail.com>
+---
+ AUTHORS    |  1 +
+ pngrtran.c | 28 ++++++++++++++--------------
+ 2 files changed, 15 insertions(+), 14 deletions(-)
+
+--- a/pngrtran.c
++++ b/pngrtran.c
+@@ -2285,7 +2285,7 @@ png_do_unpack(png_row_infop row_info, pn
+       }
+       row_info->bit_depth = 8;
+       row_info->pixel_depth = (png_byte)(8 * row_info->channels);
+-      row_info->rowbytes = row_width * row_info->channels;
++      row_info->rowbytes = (size_t)row_width * row_info->channels;
+    }
+ }
+ #endif
+@@ -2487,7 +2487,7 @@ png_do_scale_16_to_8(png_row_infop row_i
+ 
+       row_info->bit_depth = 8;
+       row_info->pixel_depth = (png_byte)(8 * row_info->channels);
+-      row_info->rowbytes = row_info->width * row_info->channels;
++      row_info->rowbytes = (size_t)row_info->width * row_info->channels;
+    }
+ }
+ #endif
+@@ -2515,7 +2515,7 @@ png_do_chop(png_row_infop row_info, png_
+ 
+       row_info->bit_depth = 8;
+       row_info->pixel_depth = (png_byte)(8 * row_info->channels);
+-      row_info->rowbytes = row_info->width * row_info->channels;
++      row_info->rowbytes = (size_t)row_info->width * row_info->channels;
+    }
+ }
+ #endif
+@@ -2751,7 +2751,7 @@ png_do_read_filler(png_row_infop row_inf
+             *(--dp) = lo_filler;
+             row_info->channels = 2;
+             row_info->pixel_depth = 16;
+-            row_info->rowbytes = row_width * 2;
++            row_info->rowbytes = (size_t)row_width * 2;
+          }
+ 
+          else
+@@ -2766,7 +2766,7 @@ png_do_read_filler(png_row_infop row_inf
+             }
+             row_info->channels = 2;
+             row_info->pixel_depth = 16;
+-            row_info->rowbytes = row_width * 2;
++            row_info->rowbytes = (size_t)row_width * 2;
+          }
+       }
+ 
+@@ -2789,7 +2789,7 @@ png_do_read_filler(png_row_infop row_inf
+             *(--dp) = hi_filler;
+             row_info->channels = 2;
+             row_info->pixel_depth = 32;
+-            row_info->rowbytes = row_width * 4;
++            row_info->rowbytes = (size_t)row_width * 4;
+          }
+ 
+          else
+@@ -2806,7 +2806,7 @@ png_do_read_filler(png_row_infop row_inf
+             }
+             row_info->channels = 2;
+             row_info->pixel_depth = 32;
+-            row_info->rowbytes = row_width * 4;
++            row_info->rowbytes = (size_t)row_width * 4;
+          }
+       }
+ #endif
+@@ -2830,7 +2830,7 @@ png_do_read_filler(png_row_infop row_inf
+             *(--dp) = lo_filler;
+             row_info->channels = 4;
+             row_info->pixel_depth = 32;
+-            row_info->rowbytes = row_width * 4;
++            row_info->rowbytes = (size_t)row_width * 4;
+          }
+ 
+          else
+@@ -2847,7 +2847,7 @@ png_do_read_filler(png_row_infop row_inf
+             }
+             row_info->channels = 4;
+             row_info->pixel_depth = 32;
+-            row_info->rowbytes = row_width * 4;
++            row_info->rowbytes = (size_t)row_width * 4;
+          }
+       }
+ 
+@@ -2874,7 +2874,7 @@ png_do_read_filler(png_row_infop row_inf
+             *(--dp) = hi_filler;
+             row_info->channels = 4;
+             row_info->pixel_depth = 64;
+-            row_info->rowbytes = row_width * 8;
++            row_info->rowbytes = (size_t)row_width * 8;
+          }
+ 
+          else
+@@ -2896,7 +2896,7 @@ png_do_read_filler(png_row_infop row_inf
+ 
+             row_info->channels = 4;
+             row_info->pixel_depth = 64;
+-            row_info->rowbytes = row_width * 8;
++            row_info->rowbytes = (size_t)row_width * 8;
+          }
+       }
+ #endif
+@@ -4390,7 +4390,7 @@ png_do_expand_palette(png_structrp png_p
+                }
+                row_info->bit_depth = 8;
+                row_info->pixel_depth = 32;
+-               row_info->rowbytes = row_width * 4;
++               row_info->rowbytes = (size_t)row_width * 4;
+                row_info->color_type = 6;
+                row_info->channels = 4;
+             }
+@@ -4398,7 +4398,7 @@ png_do_expand_palette(png_structrp png_p
+             else
+             {
+                sp = row + (size_t)row_width - 1;
+-               dp = row + (size_t)(row_width * 3) - 1;
++               dp = row + (size_t)row_width * 3 - 1;
+                i = 0;
+ #ifdef PNG_ARM_NEON_INTRINSICS_AVAILABLE
+                i = png_do_expand_palette_rgb8_neon(png_ptr, row_info, row,
+@@ -4417,7 +4417,7 @@ png_do_expand_palette(png_structrp png_p
+ 
+                row_info->bit_depth = 8;
+                row_info->pixel_depth = 24;
+-               row_info->rowbytes = row_width * 3;
++               row_info->rowbytes = (size_t)row_width * 3;
+                row_info->color_type = 2;
+                row_info->channels = 3;
+             }

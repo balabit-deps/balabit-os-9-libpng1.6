@@ -1,3 +1,42 @@
+libpng1.6 (1.6.37-3ubuntu0.5) jammy-security; urgency=medium
+
+  * SECURITY UPDATE: use-after-free via shared buffers
+    - debian/patches/CVE-2026-33416-pre1.patch: Fix a memory leak in
+      png_set_tRNS in pngset.c.
+    - debian/patches/CVE-2026-33416-pre2.patch: Avoid a memory leak when
+      allocation of a pCAL buffer fails in pngset.c.
+    - debian/patches/CVE-2026-33416-1.patch: fix: Resolve use-after-free on
+      `png_ptr->trans_alpha` in pngread.c, pngrutil.c, pngset.c, pngwrite.c.
+    - debian/patches/CVE-2026-33416-2.patch: fix: Resolve use-after-free on
+      `png_ptr->palette` in pngread.c, pngrtran.c, pngrutil.c, pngset.c,
+      pngwrite.c.
+    - debian/patches/CVE-2026-33416-3.patch: fix: Initialize tail bytes in
+      `trans_alpha` buffers in pngset.c.
+    - debian/patches/CVE-2026-33416-4.patch: fix: Sync `info_ptr->palette` after
+      in-place transforms in pngrtran.c.
+    - debian/patches/CVE-2026-33416-5.patch: fix: Sync `info_ptr->palette`
+      unconditionally after in-place transforms in pngrtran.c.
+    - CVE-2026-33416
+  * SECURITY UPDATE: out-of-bounds access in ARM palette expansion path
+    - debian/patches/CVE-2026-33636.patch: fix(arm): Resolve out-of-bounds
+      read/write in NEON palette expansion in arm/palette_neon_intrinsics.c.
+    - CVE-2026-33636
+  * SECURITY UPDATE: getter-to-setter aliasing issues
+    - debian/patches/CVE-2026-34757-1.patch: fix: Handle self-referencing
+      pointers in getter-to-setter aliasing in CMakeLists.txt, Makefile.am,
+      contrib/libtests/pnggetset.c, pngset.c, tests/pnggetset.
+    - debian/patches/CVE-2026-34757-2.patch: fix: Handle getter-to-setter
+      aliasing in append-style chunk setters in contrib/libtests/pnggetset.c,
+      pngset.c.
+    - debian/rules: set exec permissions on tests/pnggetset.
+    - CVE-2026-34757
+  * SECURITY UPDATE: integer overflow in rowbytes computation
+    - debian/patches/rowbytes_overflow.patch: fix: Prevent integer overflow in
+      rowbytes computation in pngrtran.c.
+    - No CVE number
+
+ -- Marc Deslauriers <marc.deslauriers@ubuntu.com>  Tue, 05 May 2026 15:14:16 -0400
+
 libpng1.6 (1.6.37-3ubuntu0.4) jammy-security; urgency=medium
 
   * SECURITY UPDATE: OOB read in png_set_quantize()
