@@ -22,3 +22,5 @@ CVE-2026-33636.patch
 CVE-2026-34757-1.patch
 CVE-2026-34757-2.patch
 rowbytes_overflow.patch
+CVE-2026-40930.patch
+CVE-2026-40930-post1.patch

@@ -1,3 +1,15 @@
+libpng1.6 (1.6.37-3ubuntu0.6) jammy-security; urgency=medium
+
+  * SECURITY UPDATE: Interpretation conflict in APNG parser
+    paths.
+    - debian/patches/CVE-2026-40930.patch: Restructure the trailing-fdAT
+      path in pngpread.c
+    - debian/patches/CVE-2026-40930-post1.patch: Fix hardcoded length in
+      png_ensure_sequence_number in pngpread.c
+    - CVE-2026-40930
+
+ -- Kyle Kernick <kyle.kernick@canonical.com>  Thu, 13 Aug 2026 10:20:26 -0600
+
 libpng1.6 (1.6.37-3ubuntu0.5) jammy-security; urgency=medium
 
   * SECURITY UPDATE: use-after-free via shared buffers
